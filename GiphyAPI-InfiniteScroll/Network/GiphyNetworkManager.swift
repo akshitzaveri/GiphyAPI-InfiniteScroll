@@ -30,7 +30,7 @@ struct GiphyNetworkURLBuilder {
     private let apiKey: String
     
     // dependency injection
-    init(baseURL: String = "api.giphy.com", apiKey: String = "S6E6B58AkpGPnYkQ4IHAVgr0heeae5ju") {
+    init(baseURL: String = "https://api.giphy.com", apiKey: String = "S6E6B58AkpGPnYkQ4IHAVgr0heeae5ju") {
         self.baseURL = baseURL
         self.apiKey = apiKey
     }
@@ -41,19 +41,28 @@ struct GiphyNetworkURLBuilder {
             return nil
         }
         components.path += type.rawValue
-        components.queryItems = parameters?.map({ URLQueryItem(name: $0.key, value: ($0.value as? String) ?? String(describing: $0.value)) })
-        components.queryItems?.append(URLQueryItem(name: "api_key", value: apiKey))
+        components.queryItems = getQueryItems(from: parameters)
         return components.url
+    }
+    
+    private func getQueryItems(from parameters: [String: Any]? = nil) -> [URLQueryItem] {
+        var queryItems = [ URLQueryItem(name: "api_key", value: apiKey) ]
+        if let queryItemsFromParameters = parameters?.map({ URLQueryItem(name: $0.key, value: ($0.value as? String) ?? String(describing: $0.value)) }) {
+            queryItems.append(contentsOf: queryItemsFromParameters)
+        }
+        return queryItems
     }
 }
 
 final class GiphyNetworkManager {
     private let session: NetworkSession
     
+    // dependency injection
     init(with session: NetworkSession = URLSession.shared) { self.session = session }
     
     func search(_ string: String, completion: @escaping ((SearchAPIResult?, Error?) -> Void)) {
-        guard let url = GiphyNetworkURLBuilder().build(for: .search) else { return }
+        let parameters: [String: Any] = [ "q": string ]
+        guard let url = GiphyNetworkURLBuilder().build(for: .search, with: parameters) else { return }
         session.loadData(from: url) { (data, error) in
             guard let data = data else {
                 completion(nil, error)
