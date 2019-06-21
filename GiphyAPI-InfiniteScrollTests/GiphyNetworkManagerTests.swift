@@ -13,9 +13,22 @@ struct NetworkSessionMock: NetworkSession {
     var data: Data?
     var error: Error?
     
-    func loadData(from url: URL, completionHandler: @escaping (Data?, Error?) -> Void) {
+    func loadData(from url: URL, completionHandler: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask {
         completionHandler(data, error)
+        return URLSessionDataTask()
     }
+}
+
+func getData(from fileName: String, ext: String = "json") -> Data? {
+    guard let url = Bundle(for: GiphyNetworkManagerTests.self).url(forResource: fileName, withExtension: ext) else {
+        assertionFailure("JSON file not found")
+        return nil
+    }
+    guard let data = try? Data(contentsOf: url) else {
+        assertionFailure("Conversion failure")
+        return nil
+    }
+    return data
 }
 
 class GiphyNetworkManagerTests: XCTestCase {
@@ -23,18 +36,6 @@ class GiphyNetworkManagerTests: XCTestCase {
     var sut: GiphyNetworkManager!
     
     override func tearDown() { sut = nil }
-    
-    private func getData(from fileName: String, ext: String = "json") -> Data? {
-        guard let url = Bundle(for: GiphyNetworkManagerTests.self).url(forResource: fileName, withExtension: ext) else {
-            assertionFailure("JSON file not found")
-            return nil
-        }
-        guard let data = try? Data(contentsOf: url) else {
-            assertionFailure("Conversion failure")
-            return nil
-        }
-        return data
-    }
     
     func test_Search_API_Success() {
         // given

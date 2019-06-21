@@ -24,6 +24,10 @@
 		BFE9F64B22BCD6250055662C /* GiphyNetworkURLBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F64A22BCD6250055662C /* GiphyNetworkURLBuilderTests.swift */; };
 		BFE9F64F22BCE95A0055662C /* GIFImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F64D22BCE95A0055662C /* GIFImageCollectionViewCell.swift */; };
 		BFE9F65022BCE95A0055662C /* GIFImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFE9F64E22BCE95A0055662C /* GIFImageCollectionViewCell.xib */; };
+		BFE9F65222BCF5BE0055662C /* TilesCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65122BCF5BE0055662C /* TilesCollectionViewLayout.swift */; };
+		BFE9F65422BD01330055662C /* GiphyImageListCollectionViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65322BD01330055662C /* GiphyImageListCollectionViewAdapter.swift */; };
+		BFE9F65622BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65522BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift */; };
+		BFE9F65822BD29690055662C /* TilesCollectionViewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65722BD29690055662C /* TilesCollectionViewLayoutTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +75,10 @@
 		BFE9F64A22BCD6250055662C /* GiphyNetworkURLBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyNetworkURLBuilderTests.swift; sourceTree = "<group>"; };
 		BFE9F64D22BCE95A0055662C /* GIFImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		BFE9F64E22BCE95A0055662C /* GIFImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIFImageCollectionViewCell.xib; sourceTree = "<group>"; };
+		BFE9F65122BCF5BE0055662C /* TilesCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilesCollectionViewLayout.swift; sourceTree = "<group>"; };
+		BFE9F65322BD01330055662C /* GiphyImageListCollectionViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImageListCollectionViewAdapter.swift; sourceTree = "<group>"; };
+		BFE9F65522BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImageListCollectionViewAdapterTests.swift; sourceTree = "<group>"; };
+		BFE9F65722BD29690055662C /* TilesCollectionViewLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilesCollectionViewLayoutTests.swift; sourceTree = "<group>"; };
 		D6CD7B5A739C1E6B44B71553 /* Pods_GiphyAPI_InfiniteScroll.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GiphyAPI_InfiniteScroll.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9881FF924D64A04B25C4B94 /* Pods_GiphyAPI_InfiniteScrollUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GiphyAPI_InfiniteScrollUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -156,6 +164,8 @@
 				BF11522C22BA7D1800EBE9D5 /* GiphyNetworkManagerTests.swift */,
 				BFE9F64A22BCD6250055662C /* GiphyNetworkURLBuilderTests.swift */,
 				BF11522E22BA7D1800EBE9D5 /* Info.plist */,
+				BFE9F65522BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift */,
+				BFE9F65722BD29690055662C /* TilesCollectionViewLayoutTests.swift */,
 			);
 			path = "GiphyAPI-InfiniteScrollTests";
 			sourceTree = "<group>";
@@ -192,6 +202,8 @@
 				BF11521922BA7D1500EBE9D5 /* SearchViewController.swift */,
 				BFE9F64D22BCE95A0055662C /* GIFImageCollectionViewCell.swift */,
 				BFE9F64E22BCE95A0055662C /* GIFImageCollectionViewCell.xib */,
+				BFE9F65122BCF5BE0055662C /* TilesCollectionViewLayout.swift */,
+				BFE9F65322BD01330055662C /* GiphyImageListCollectionViewAdapter.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -460,7 +472,9 @@
 			files = (
 				BF42BEA622BB05D400555E50 /* GIFImage.swift in Sources */,
 				BF11521A22BA7D1500EBE9D5 /* SearchViewController.swift in Sources */,
+				BFE9F65222BCF5BE0055662C /* TilesCollectionViewLayout.swift in Sources */,
 				BFE9F64922BCCC4D0055662C /* GiphyNetworkManager.swift in Sources */,
+				BFE9F65422BD01330055662C /* GiphyImageListCollectionViewAdapter.swift in Sources */,
 				BF11521822BA7D1500EBE9D5 /* AppDelegate.swift in Sources */,
 				BFE9F64F22BCE95A0055662C /* GIFImageCollectionViewCell.swift in Sources */,
 			);
@@ -470,7 +484,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFE9F65822BD29690055662C /* TilesCollectionViewLayoutTests.swift in Sources */,
 				BFE9F64B22BCD6250055662C /* GiphyNetworkURLBuilderTests.swift in Sources */,
+				BFE9F65622BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift in Sources */,
 				BF11522D22BA7D1800EBE9D5 /* GiphyNetworkManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -642,6 +658,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G977HV28A;
 				INFOPLIST_FILE = "GiphyAPI-InfiniteScroll/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -661,6 +678,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G977HV28A;
 				INFOPLIST_FILE = "GiphyAPI-InfiniteScroll/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

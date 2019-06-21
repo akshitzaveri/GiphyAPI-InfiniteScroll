@@ -9,15 +9,16 @@
 import Foundation
 
 protocol NetworkSession {
-    func loadData(from url: URL, completionHandler: @escaping (Data?, Error?) -> Void)
+    func loadData(from url: URL, completionHandler: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask
 }
 
 extension URLSession: NetworkSession {
-    func loadData(from url: URL, completionHandler: @escaping (Data?, Error?) -> Void) {
+    func loadData(from url: URL, completionHandler: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask {
         let task = dataTask(with: url) { (data, _, error) in
             completionHandler(data, error)
         }
         task.resume()
+        return task
     }
 }
 
@@ -35,6 +36,7 @@ struct GiphyNetworkURLBuilder {
         self.apiKey = apiKey
     }
     
+    // Assumption - Only GET request for now. Can accomodate POST and other type of requests if needed.
     func build(for type: Endpoint, with parameters: [String: Any]? = nil) -> URL? {
         guard var components = URLComponents(string: baseURL) else {
             print("Failed to create components for \(type)")
@@ -60,10 +62,11 @@ final class GiphyNetworkManager {
     // dependency injection
     init(with session: NetworkSession = URLSession.shared) { self.session = session }
     
-    func search(_ string: String, completion: @escaping ((SearchAPIResult?, Error?) -> Void)) {
+    @discardableResult
+    func search(_ string: String, completion: @escaping ((SearchAPIResult?, Error?) -> Void)) -> URLSessionDataTask? {
         let parameters: [String: Any] = [ "q": string ]
-        guard let url = GiphyNetworkURLBuilder().build(for: .search, with: parameters) else { return }
-        session.loadData(from: url) { (data, error) in
+        guard let url = GiphyNetworkURLBuilder().build(for: .search, with: parameters) else { return nil }
+        let task = session.loadData(from: url) { (data, error) in
             guard let data = data else {
                 completion(nil, error)
                 return
@@ -76,6 +79,7 @@ final class GiphyNetworkManager {
                 completion(nil, error)
             }
         }
+        return task
     }
 }
 
@@ -94,7 +98,14 @@ struct SearchAPIResult: Decodable {
     var data: [GIFImage]?
     var pagination: Pagination?
     var meta: Meta?
+    var response_id: String?
     
     var statusCode: String?
     var errorMessage: String?
+}
+
+extension SearchAPIResult: Equatable {
+    static func == (lhs: SearchAPIResult, rhs: SearchAPIResult) -> Bool {
+        return lhs.response_id == rhs.response_id
+    }
 }
