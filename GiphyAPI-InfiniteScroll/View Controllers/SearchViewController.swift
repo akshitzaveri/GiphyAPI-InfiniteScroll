@@ -13,23 +13,36 @@ final class SearchViewController: UIViewController {
     @IBOutlet weak var resultsCollectionView: UICollectionView!
     
     private var manager = GiphyNetworkManager()
-    private var searchTask: URLSessionDataTask?
+    private var currentSearchAPITask: URLSessionDataTask?
     private var result: SearchAPIResult?
     private var collectionViewAdapter: GiphyImageListCollectionViewAdapter?
     
+    private var searchController = UISearchController(searchResultsController: nil)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        giphy_search(for: "bottle")
+        
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search cool GIFs"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         resultsCollectionView.collectionViewLayout.invalidateLayout()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchController.searchBar.becomeFirstResponder()
+    }
+    
     private func giphy_search(for string: String) {
         let newOffSet = (result?.pagination?.offset ?? 0) + (result?.pagination?.count ?? 0)
         print("Loading new data \(newOffSet)")
-        searchTask = manager.search(string, newOffSet, completion: { (response, error) in
+        currentSearchAPITask?.cancel()
+        currentSearchAPITask = manager.search(string, newOffSet, completion: { (response, error) in
             DispatchQueue.main.async {
                 if self.collectionViewAdapter == nil {
                     self.result = response
@@ -44,10 +57,27 @@ final class SearchViewController: UIViewController {
             }
         })
     }
+    
+    
+    func searchBarIsEmpty() -> Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    func filterContentForSearchText(_ searchText: String) {
+        result = nil
+        self.collectionViewAdapter?.update(result)
+        giphy_search(for: searchText)
+    }
 }
 
 extension SearchViewController: GiphyImageListCollectionViewAdapterDelegate {
     func loadNextPage() {
-        giphy_search(for: "bottle")
+        giphy_search(for: searchController.searchBar.text ?? "")
+    }
+}
+
+extension SearchViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text ?? "")
     }
 }
