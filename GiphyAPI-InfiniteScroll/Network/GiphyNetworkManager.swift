@@ -63,8 +63,12 @@ final class GiphyNetworkManager {
     init(with session: NetworkSession = URLSession.shared) { self.session = session }
     
     @discardableResult
-    func search(_ string: String, completion: @escaping ((SearchAPIResult?, Error?) -> Void)) -> URLSessionDataTask? {
-        let parameters: [String: Any] = [ "q": string ]
+    func search(_ string: String,
+                _ offset: Int = 0,
+                completion: @escaping ((SearchAPIResult?, Error?) -> Void)) -> URLSessionDataTask? {
+        
+        let parameters: [String: Any] = [ "q": string, "offset": offset ]
+        print(parameters)
         guard let url = GiphyNetworkURLBuilder().build(for: .search, with: parameters) else { return nil }
         let task = session.loadData(from: url) { (data, error) in
             guard let data = data else {
@@ -80,32 +84,5 @@ final class GiphyNetworkManager {
             }
         }
         return task
-    }
-}
-
-struct SearchAPIResult: Decodable {
-    struct Pagination: Decodable {
-        var total_count: Int? // Assumption - The total count is less than 2^64 = 1.844674407E19
-        var count: Int?
-        var offset: Int?
-    }
-    
-    struct Meta: Decodable {
-        var status: Int?
-        var msg: String?
-    }
-    
-    var data: [GIFImage]?
-    var pagination: Pagination?
-    var meta: Meta?
-    var response_id: String?
-    
-    var statusCode: String?
-    var errorMessage: String?
-}
-
-extension SearchAPIResult: Equatable {
-    static func == (lhs: SearchAPIResult, rhs: SearchAPIResult) -> Bool {
-        return lhs.response_id == rhs.response_id
     }
 }

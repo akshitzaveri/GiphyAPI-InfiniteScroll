@@ -14,43 +14,62 @@ protocol GiphyImageListCollectionViewAdapterDelegate {
 }
 
 class GiphyImageListCollectionViewAdapter: NSObject {
-    let kSECTION_INSETS = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-    let kNUMBER_OF_COLUMNS = CGFloat(2)
-    let kMINIMUM_INTER_ITEM_SPACING = CGFloat(8)
-    let kMINIMUM_LINE_SPACING = CGFloat(8)
+    let kSECTION_INSET: UIEdgeInsets
+    let kNUMBER_OF_COLUMNS: Int
+    let kMINIMUM_INTER_ITEM_SPACING: CGFloat
+    let kMINIMUM_LINE_SPACING: CGFloat
     let kGIFImageCollectionViewCellName = "GIFImageCollectionViewCell"
     private(set) var collectionView: UICollectionView!
     private(set) var result: SearchAPIResult?
     private(set) var delegate: GiphyImageListCollectionViewAdapterDelegate?
     private(set) var prefetchingDownloadTasks = [IndexPath: URLSessionDataTask]()
     
-    init(with collectionView: UICollectionView, and result: SearchAPIResult?, delegate: GiphyImageListCollectionViewAdapterDelegate?) {
-        super.init()
+    init(with collectionView: UICollectionView,
+         and result: SearchAPIResult?,
+         delegate: GiphyImageListCollectionViewAdapterDelegate?,
+         sectionInset: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8),
+         columns: Int = 2,
+         minimumInteritemSpacing: CGFloat = CGFloat(8),
+         minimumLineSpacing: CGFloat = CGFloat(8)) {
         
+        kSECTION_INSET = sectionInset
+        kNUMBER_OF_COLUMNS = columns
+        kMINIMUM_INTER_ITEM_SPACING = minimumInteritemSpacing
+        kMINIMUM_LINE_SPACING = minimumLineSpacing
         self.delegate = delegate
         self.result = result
-        
         self.collectionView = collectionView
-        setSectionInsetAndSpacings()
+        
+        super.init()
+        
+        setupCollectionViewTilesLayout()
         
         let nib = UINib(nibName: kGIFImageCollectionViewCellName, bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "cell")
         
         collectionView.dataSource = self
         collectionView.prefetchDataSource = self
-        
-        // Note - We don't need UICollectionViewDelegate methods for now. But to make UICollectionViewDelegateFlowLayout work, we have to assign a delegate
-        collectionView.delegate = self
+    }
+    
+    func update(_ result: SearchAPIResult?) {
+        self.result = result
+        guard let layout = collectionView.collectionViewLayout as? TilesCollectionViewLayout else {
+            return
+        }
+        layout.invalidateLayout()
+        reloadData()
     }
     
     // Note - We could simply keep reloadData in view controller but it's more about separating concerns
     func reloadData() { collectionView.reloadData() }
     
-    private func setSectionInsetAndSpacings() {
-        let flowLayout = collectionView.collectionViewLayout as? TilesCollectionViewLayout
-        flowLayout?.sectionInset = kSECTION_INSETS
-        flowLayout?.minimumInteritemSpacing = kMINIMUM_INTER_ITEM_SPACING
-        flowLayout?.minimumLineSpacing = kMINIMUM_LINE_SPACING
+    private func setupCollectionViewTilesLayout() {
+        let flowLayout = TilesCollectionViewLayout(numberOfColumns: kNUMBER_OF_COLUMNS,
+                                                   delegate: self,
+                                                   sectionInset: kSECTION_INSET,
+                                                   minimumInteritemSpacing: kMINIMUM_INTER_ITEM_SPACING,
+                                                   minimumLineSpacing: kMINIMUM_LINE_SPACING)
+        collectionView.collectionViewLayout = flowLayout
     }
 }
 
@@ -61,23 +80,6 @@ extension GiphyImageListCollectionViewAdapter: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? GIFImageCollectionViewCell else { return UICollectionViewCell() }
         if let image = result?.data?[indexPath.item] { cell.set(image) }
         return cell
-    }
-}
-
-extension GiphyImageListCollectionViewAdapter: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = CGSize.zero
-        guard let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout,
-            let image = result?.data?[indexPath.item], let width = Double(image.images?.preview_gif?.width ?? "0"),
-            let height = Double(image.images?.preview_gif?.height ?? "0") else { return size }
-        
-        let insets = flowLayout.sectionInset.left + flowLayout.sectionInset.right + flowLayout.minimumInteritemSpacing
-        size.width = (collectionView.frame.width - insets) / kNUMBER_OF_COLUMNS
-        
-        let aspectRatio = CGFloat(width / height)
-        size.height = size.width / aspectRatio
-        
-        return size
     }
 }
 
@@ -111,3 +113,26 @@ extension GiphyImageListCollectionViewAdapter: UICollectionViewDataSourcePrefetc
     }
 }
 
+extension GiphyImageListCollectionViewAdapter: TilesCollectionViewLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, aspectRatioForImageAtIndexPath indexPath: IndexPath) -> CGFloat {
+        
+//        var size = CGSize.zero
+//        guard let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout,
+//            let image = result?.data?[indexPath.item], let width = Double(image.images?.preview_gif?.width ?? "0"),
+//            let height = Double(image.images?.preview_gif?.height ?? "0") else { return 0 }
+        
+        guard let heightString = result?.data?[indexPath.item].images?.preview_gif?.height,
+            let height = Double(heightString),
+            let widthString = result?.data?[indexPath.item].images?.preview_gif?.width,
+            let width = Double(widthString) else {
+            return 0
+        }
+        return CGFloat(width/height)
+        
+//        let insets = flowLayout.sectionInset.left + flowLayout.sectionInset.right + flowLayout.minimumInteritemSpacing
+//        size.width = (collectionView.frame.width - insets) / kNUMBER_OF_COLUMNS
+//
+//        let aspectRatio = CGFloat(width / height)
+//        size.height = size.width / aspectRatio
+    }
+}

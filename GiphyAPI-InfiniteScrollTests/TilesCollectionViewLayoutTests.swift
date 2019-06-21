@@ -11,34 +11,54 @@ import XCTest
 
 class TilesCollectionViewLayoutTests: XCTestCase {
 
-    // Assumption - The collectionview layout is supports 2 columns layout only.
+    // Assumption - The collectionview layout supports 2 columns layout only.
     
-    func test_FirstSecondCell_Frame_OriginY() {
-        // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
-        let adapter = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: nil)
-        
-        // when
-        let attribtues = collectionView.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))
-        let attribtues1 = collectionView.layoutAttributesForItem(at: IndexPath(item: 1, section: 0))
-        
-        // then
-        XCTAssertEqual(attribtues?.frame.origin.y, adapter.kSECTION_INSETS.top)
-        XCTAssertEqual(attribtues1?.frame.origin.y, adapter.kSECTION_INSETS.top)
+    class TilesCollectionViewLayoutDelegateMock: TilesCollectionViewLayoutDelegate {
+        let aspectRatios: [CGFloat] = [1.1, 1.2, 0.78, 0.3, 4]
+        func collectionView(_ collectionView: UICollectionView,
+                            aspectRatioForImageAtIndexPath indexPath: IndexPath) -> CGFloat {
+            
+            return aspectRatios[indexPath.item]
+        }
     }
     
-    func test_ThirdCell_Frame_OriginY() {
+    class CollectionViewDatasourceMock: NSObject, UICollectionViewDataSource {
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return 5 }
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell { return UICollectionViewCell() }
+    }
+    
+    func getMockCollectionView() -> UICollectionView {
+        return UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: getMockTilesCollectionViewLayout())
+    }
+    
+    func getMockTilesCollectionViewLayout() -> TilesCollectionViewLayout {
+        return TilesCollectionViewLayout(numberOfColumns: getMockColumns(), delegate: nil, sectionInset: getMockSectionInset(), minimumInteritemSpacing: getMockInteritemSpacing(), minimumLineSpacing: getMockLineSpacing())
+    }
+    
+    func getMockSectionInset() -> UIEdgeInsets { return UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4) }
+    func getMockColumns() -> Int { return 2 }
+    func getMockInteritemSpacing() -> CGFloat { return 5 }
+    func getMockLineSpacing() -> CGFloat { return 6 }
+    
+    func getMockSearchResult() -> SearchAPIResult {
+        return try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+    }
+    
+    var dataSource: CollectionViewDatasourceMock?
+    func test_FirstLoad_Cache() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
-        let adapter = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: nil)
+        let collectionView = getMockCollectionView()
+        dataSource = CollectionViewDatasourceMock()
+        collectionView.dataSource = dataSource
+        
+        let sut = collectionView.collectionViewLayout as! TilesCollectionViewLayout
+        let delegate = TilesCollectionViewLayoutDelegateMock()
+        sut.delegate = delegate
         
         // when
-        let attribtues = collectionView.layoutAttributesForItem(at: IndexPath(item: 2, section: 0))
+        sut.prepare()
         
         // then
-        let spacings = adapter.kSECTION_INSETS.top + adapter.kMINIMUM_LINE_SPACING
-        XCTAssertEqual(attribtues?.frame.origin.y, 119 + spacings)
+        XCTAssertEqual(sut.cache[0].bounds.size, CGSize(width: 244.5, height: 222.27272727272725))
     }
 }

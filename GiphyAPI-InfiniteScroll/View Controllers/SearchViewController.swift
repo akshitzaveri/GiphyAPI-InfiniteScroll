@@ -23,23 +23,31 @@ final class SearchViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        resultsCollectionView.reloadData()
+        resultsCollectionView.collectionViewLayout.invalidateLayout()
     }
     
     private func giphy_search(for string: String) {
-        searchTask = manager.search(string, completion: { (response, error) in
-            self.result = response
-            DispatchQueue.main.async { [unowned self] in
-                self.collectionViewAdapter = GiphyImageListCollectionViewAdapter(with: self.resultsCollectionView, and: response, delegate: self)
-                self.collectionViewAdapter?.reloadData()
+        let newOffSet = (result?.pagination?.offset ?? 0) + (result?.pagination?.count ?? 0)
+        print("Loading new data \(newOffSet)")
+        searchTask = manager.search(string, newOffSet, completion: { (response, error) in
+            DispatchQueue.main.async {
+                if self.collectionViewAdapter == nil {
+                    self.result = response
+                    self.collectionViewAdapter = GiphyImageListCollectionViewAdapter(with: self.resultsCollectionView, and: response, delegate: self)
+                    self.collectionViewAdapter?.reloadData()
+                } else if (response?.data?.count ?? 0) > 0 {
+                    let existingImages = self.result?.data ?? []
+                    self.result = response
+                    self.result?.data?.insert(contentsOf: existingImages, at: 0)
+                    self.collectionViewAdapter?.update(self.result)
+                }
             }
         })
     }
 }
 
 extension SearchViewController: GiphyImageListCollectionViewAdapterDelegate {
-    
     func loadNextPage() {
-        print("=============================")
+        giphy_search(for: "bottle")
     }
 }

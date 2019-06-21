@@ -13,13 +13,15 @@ final class GIFImageCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
+    private var downloadTask: URLSessionDataTask?
     
     func set(_ image: GIFImage) {
+        downloadTask?.cancel()
         imageView.image = nil
+        imageView.gifImage?.clear()
+        imageView.gifImage = nil
+        imageView.currentImage = nil
         guard let url = image.images?.preview_gif?.url else { return }
-        imageView.setGifFromURL(url)
+        downloadTask = imageView.setGifFromURL(url)
     }
 }

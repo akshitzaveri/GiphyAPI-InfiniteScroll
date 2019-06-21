@@ -28,6 +28,7 @@
 		BFE9F65422BD01330055662C /* GiphyImageListCollectionViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65322BD01330055662C /* GiphyImageListCollectionViewAdapter.swift */; };
 		BFE9F65622BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65522BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift */; };
 		BFE9F65822BD29690055662C /* TilesCollectionViewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65722BD29690055662C /* TilesCollectionViewLayoutTests.swift */; };
+		BFE9F65A22BD32C90055662C /* SearchAPIResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F65922BD32C90055662C /* SearchAPIResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		BFE9F65322BD01330055662C /* GiphyImageListCollectionViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImageListCollectionViewAdapter.swift; sourceTree = "<group>"; };
 		BFE9F65522BD13DA0055662C /* GiphyImageListCollectionViewAdapterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImageListCollectionViewAdapterTests.swift; sourceTree = "<group>"; };
 		BFE9F65722BD29690055662C /* TilesCollectionViewLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilesCollectionViewLayoutTests.swift; sourceTree = "<group>"; };
+		BFE9F65922BD32C90055662C /* SearchAPIResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAPIResult.swift; sourceTree = "<group>"; };
 		D6CD7B5A739C1E6B44B71553 /* Pods_GiphyAPI_InfiniteScroll.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GiphyAPI_InfiniteScroll.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9881FF924D64A04B25C4B94 /* Pods_GiphyAPI_InfiniteScrollUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GiphyAPI_InfiniteScrollUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				BFE9F64822BCCC4D0055662C /* GiphyNetworkManager.swift */,
+				BFE9F65922BD32C90055662C /* SearchAPIResult.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				BFE9F65422BD01330055662C /* GiphyImageListCollectionViewAdapter.swift in Sources */,
 				BF11521822BA7D1500EBE9D5 /* AppDelegate.swift in Sources */,
 				BFE9F64F22BCE95A0055662C /* GIFImageCollectionViewCell.swift in Sources */,
+				BFE9F65A22BD32C90055662C /* SearchAPIResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

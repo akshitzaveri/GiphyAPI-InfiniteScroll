@@ -19,14 +19,32 @@ class GiphyImageListCollectionViewAdapterTests: XCTestCase {
 
 // MARK: Tests for data source functions
 extension GiphyImageListCollectionViewAdapterTests {
+    
+    func getMockCollectionView() -> UICollectionView {
+        return UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: getMockTilesCollectionViewLayout())
+    }
+    
+    func getMockSectionInset() -> UIEdgeInsets { return UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4) }
+    func getMockColumns() -> Int { return 2 }
+    func getMockInteritemSpacing() -> CGFloat { return 5 }
+    func getMockLineSpacing() -> CGFloat { return 6 }
+    
+    func getMockTilesCollectionViewLayout() -> TilesCollectionViewLayout {
+        return TilesCollectionViewLayout(numberOfColumns: getMockColumns(), delegate: nil, sectionInset: getMockSectionInset(), minimumInteritemSpacing: getMockInteritemSpacing(), minimumLineSpacing: getMockLineSpacing())
+    }
+    
+    func getMockSearchResult() -> SearchAPIResult {
+        return try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+    }
+    
     func test_Initialization() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
-        let sut = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: viewcontroller)
+        let sut = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: viewcontroller, sectionInset: getMockSectionInset(), columns: getMockColumns(), minimumInteritemSpacing: getMockInteritemSpacing(), minimumLineSpacing: getMockLineSpacing())
         
         // then
         XCTAssertNotNil(sut)
@@ -38,24 +56,21 @@ extension GiphyImageListCollectionViewAdapterTests {
         XCTAssertNotNil(sut.collectionView.prefetchDataSource)
         assert(sut.collectionView.prefetchDataSource is GiphyImageListCollectionViewAdapter)
         
-        XCTAssertNotNil(sut.collectionView.delegate)
-        assert(sut.collectionView.delegate is GiphyImageListCollectionViewAdapter)
-        
         XCTAssertEqual(sut.result!, searchResult)
         
         assert(sut.delegate! is SearchViewControllerMock)
         assert(sut.collectionView.collectionViewLayout is TilesCollectionViewLayout)
         
         let flowLayout = collectionView.collectionViewLayout as! TilesCollectionViewLayout
-        XCTAssertEqual(flowLayout.sectionInset, sut.kSECTION_INSETS)
-        XCTAssertEqual(flowLayout.minimumInteritemSpacing, sut.kMINIMUM_INTER_ITEM_SPACING)
-        XCTAssertEqual(flowLayout.minimumLineSpacing, sut.kMINIMUM_LINE_SPACING)
+        XCTAssertEqual(flowLayout.sectionInset, UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4))
+        XCTAssertEqual(flowLayout.minimumInteritemSpacing, 5)
+        XCTAssertEqual(flowLayout.minimumLineSpacing, 6)
     }
     
     func test_CollectionView_NumberOfItems() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
@@ -68,8 +83,8 @@ extension GiphyImageListCollectionViewAdapterTests {
     
     func test_CollectionView_CellForItemAtIndexPath() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
@@ -80,19 +95,21 @@ extension GiphyImageListCollectionViewAdapterTests {
         XCTAssertTrue(cell is GIFImageCollectionViewCell)
     }
     
-    func test_CollectionViewCell_Size() {
+    func test_CollectionViewCell_Size_AspectRatio() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
         let sut = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: viewcontroller)
-        let size = sut.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
+        let aspectRatio = sut.collectionView(collectionView, aspectRatioForImageAtIndexPath: IndexPath(item: 0, section: 0))
+        let preview = searchResult.data!.first!.images!.preview_gif!
+        let width = CGFloat(Double(preview.width!)!)
+        let height = CGFloat(Double(preview.height!)!)
         
         // then
-        XCTAssertEqual(size.width, 238)
-        XCTAssertEqual(size.height, 119)
+        XCTAssertEqual(aspectRatio, width/height)
     }
 }
 
@@ -101,8 +118,8 @@ extension GiphyImageListCollectionViewAdapterTests {
     
     func test_CollectionView_PrefetchingNextImages() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
@@ -118,8 +135,8 @@ extension GiphyImageListCollectionViewAdapterTests {
     
     func test_CollectionView_PrefetchingNextImages_CancelOperation() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
@@ -136,8 +153,8 @@ extension GiphyImageListCollectionViewAdapterTests {
     
     func test_Prefetch_loadNextPage() {
         // given
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: TilesCollectionViewLayout())
-        let searchResult = try! JSONDecoder().decode(SearchAPIResult.self, from: getData(from: "giphy_search_response_success")!)
+        let collectionView = getMockCollectionView()
+        let searchResult = getMockSearchResult()
         let viewcontroller = SearchViewControllerMock()
         
         // when
