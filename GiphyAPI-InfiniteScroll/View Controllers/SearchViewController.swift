@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
 
     @IBOutlet weak var resultsCollectionView: UICollectionView!
     
@@ -30,7 +30,5 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         <#code#>
     }
-    
-    
     
 }

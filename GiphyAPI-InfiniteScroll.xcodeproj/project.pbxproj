@@ -18,6 +18,8 @@
 		BF42BEA222BB058300555E50 /* giphy_search_response_failure.json in Resources */ = {isa = PBXBuildFile; fileRef = BF42BEA022BB058200555E50 /* giphy_search_response_failure.json */; };
 		BF42BEA322BB058300555E50 /* giphy_search_response_success_no_results.json in Resources */ = {isa = PBXBuildFile; fileRef = BF42BEA122BB058200555E50 /* giphy_search_response_success_no_results.json */; };
 		BF42BEA622BB05D400555E50 /* GIFImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF42BEA522BB05D400555E50 /* GIFImage.swift */; };
+		BFE9F63C22BCAE130055662C /* GenericRemoteClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F63A22BCAE130055662C /* GenericRemoteClient.swift */; };
+		BFE9F63D22BCAE130055662C /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE9F63B22BCAE130055662C /* Endpoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		BF42BEA022BB058200555E50 /* giphy_search_response_failure.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = giphy_search_response_failure.json; sourceTree = "<group>"; };
 		BF42BEA122BB058200555E50 /* giphy_search_response_success_no_results.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = giphy_search_response_success_no_results.json; sourceTree = "<group>"; };
 		BF42BEA522BB05D400555E50 /* GIFImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImage.swift; sourceTree = "<group>"; };
+		BFE9F63A22BCAE130055662C /* GenericRemoteClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericRemoteClient.swift; sourceTree = "<group>"; };
+		BFE9F63B22BCAE130055662C /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,7 @@
 		BF11521622BA7D1500EBE9D5 /* GiphyAPI-InfiniteScroll */ = {
 			isa = PBXGroup;
 			children = (
+				BFE9F63922BCAE050055662C /* RemoteClient */,
 				BF42BEA422BB058A00555E50 /* Models */,
 				BF11521722BA7D1500EBE9D5 /* AppDelegate.swift */,
 				BF42BE9C22BB03EE00555E50 /* Resources */,
@@ -167,6 +172,15 @@
 				BF42BEA522BB05D400555E50 /* GIFImage.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		BFE9F63922BCAE050055662C /* RemoteClient */ = {
+			isa = PBXGroup;
+			children = (
+				BFE9F63B22BCAE130055662C /* Endpoint.swift */,
+				BFE9F63A22BCAE130055662C /* GenericRemoteClient.swift */,
+			);
+			path = RemoteClient;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -303,9 +317,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFE9F63C22BCAE130055662C /* GenericRemoteClient.swift in Sources */,
 				BF42BEA622BB05D400555E50 /* GIFImage.swift in Sources */,
 				BF11521A22BA7D1500EBE9D5 /* SearchViewController.swift in Sources */,
 				BF11521822BA7D1500EBE9D5 /* AppDelegate.swift in Sources */,
+				BFE9F63D22BCAE130055662C /* Endpoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
