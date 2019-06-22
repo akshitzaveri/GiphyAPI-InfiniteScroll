@@ -10,3 +10,4 @@ Build a simple iPhone app to search and display gifs using the Giphy API. Follow
 - You can use third party libraries either with Cocoapods or Carthage. The only exception is Giphy Core SDK ( https://github.com/Giphy/giphy-ios-sdk-core ) as we expect you to build the Networking and Model layers.
 
 # Assumptions made
+- Search for "Assumption" in the project. There are 4 assumption made

@@ -69,7 +69,7 @@ final class GiphyNetworkManager {
                 _ offset: Int = 0,
                 completion: @escaping ((SearchAPIResult?, Error?) -> Void)) -> URLSessionDataTask? {
         
-        let parameters: [String: Any] = [ "q": string, "offset": offset ]
+        let parameters: [String: Any] = [ "q": string, "offset": offset, "limit": 20 ]
         print(parameters)
         guard let url = GiphyNetworkURLBuilder().build(for: .search, with: parameters) else { return nil }
         let task = session.loadData(from: url) { (data, error) in
