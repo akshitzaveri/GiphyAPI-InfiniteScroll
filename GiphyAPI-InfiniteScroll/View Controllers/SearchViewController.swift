@@ -40,7 +40,6 @@ final class SearchViewController: UIViewController {
     
     private func giphy_search(for string: String) {
         let newOffSet = (result?.pagination?.offset ?? 0) + (result?.pagination?.count ?? 0)
-        print("Loading new data \(newOffSet)")
         currentSearchAPITask?.cancel()
         currentSearchAPITask = manager.search(string, newOffSet, completion: { (response, error) in
             DispatchQueue.main.async {
@@ -56,11 +55,6 @@ final class SearchViewController: UIViewController {
                 }
             }
         })
-    }
-    
-    
-    func searchBarIsEmpty() -> Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
     }
     
     func filterContentForSearchText(_ searchText: String) {

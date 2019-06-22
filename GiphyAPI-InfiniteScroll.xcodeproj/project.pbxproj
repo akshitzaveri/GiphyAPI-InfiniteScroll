@@ -298,6 +298,7 @@
 				BF11522F22BA7D1800EBE9D5 /* Sources */,
 				BF11523022BA7D1800EBE9D5 /* Frameworks */,
 				BF11523122BA7D1800EBE9D5 /* Resources */,
+				2DF62340FCA9A15AA1D78D25 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -442,6 +443,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GiphyAPI-InfiniteScroll/Pods-GiphyAPI-InfiniteScroll-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2DF62340FCA9A15AA1D78D25 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GiphyAPI-InfiniteScrollUITests/Pods-GiphyAPI-InfiniteScrollUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GiphyAPI-InfiniteScrollUITests/Pods-GiphyAPI-InfiniteScrollUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GiphyAPI-InfiniteScrollUITests/Pods-GiphyAPI-InfiniteScrollUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C2E33A946589D8B333D99C32 /* [CP] Check Pods Manifest.lock */ = {

@@ -14,6 +14,7 @@ target 'GiphyAPI-InfiniteScroll' do
   target 'GiphyAPI-InfiniteScrollUITests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'SwiftyGif'
   end
 
 end

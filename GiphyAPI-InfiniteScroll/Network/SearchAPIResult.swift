@@ -10,7 +10,7 @@ import Foundation
 
 struct SearchAPIResult: Decodable {
     struct Pagination: Decodable {
-        var total_count: Int? // Assumption - The total count is less than 2^64 = 1.844674407E19
+        var total_count: Int? // Assumption - The total count is less than 2^64
         var count: Int?
         var offset: Int?
     }

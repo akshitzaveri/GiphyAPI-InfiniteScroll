@@ -15,20 +15,15 @@ protocol TilesCollectionViewLayoutDelegate: class {
 class TilesCollectionViewLayout: UICollectionViewFlowLayout {
     
     weak var delegate: TilesCollectionViewLayoutDelegate!
-    fileprivate var numberOfColumns: Int
     private(set) var cache = [UICollectionViewLayoutAttributes]()
-    fileprivate var contentWidth: CGFloat {
+    private var numberOfColumns: Int
+    private var contentWidth: CGFloat {
         guard let collectionView = collectionView else { return 0 }
         let insets = collectionView.contentInset
         return collectionView.bounds.width - (insets.left + insets.right)
     }
-    fileprivate var contentHeight = CGFloat(0)
-    override var collectionViewContentSize: CGSize {
-        return CGSize(width: contentWidth, height: contentHeight)
-    }
-    
-    var xOffset = [CGFloat]()
-    var yOffset = [CGFloat]()
+    private var contentHeight = CGFloat(0)
+    override var collectionViewContentSize: CGSize { return CGSize(width: contentWidth, height: contentHeight) }
     
     init(numberOfColumns: Int = 2,
          delegate: TilesCollectionViewLayoutDelegate?,
@@ -44,13 +39,12 @@ class TilesCollectionViewLayout: UICollectionViewFlowLayout {
         self.minimumLineSpacing = minimumLineSpacing
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("Not implemented")
-    }
+    required init?(coder aDecoder: NSCoder) { fatalError("Not implemented") }
     
     func getColumnWidth() -> CGFloat {
         let interItemSpacing = (minimumInteritemSpacing * CGFloat(numberOfColumns - 1))
-        let columnWidth = (contentWidth - interItemSpacing - sectionInset.left - sectionInset.right) / CGFloat(numberOfColumns)
+        let sectionInsets = sectionInset.left + sectionInset.right
+        let columnWidth = (contentWidth - sectionInsets - interItemSpacing) / CGFloat(numberOfColumns)
         return columnWidth
     }
     
@@ -58,39 +52,54 @@ class TilesCollectionViewLayout: UICollectionViewFlowLayout {
         guard cache.isEmpty, let collectionView = collectionView else { return }
         
         let columnWidth = getColumnWidth()
-        xOffset = [CGFloat]()
+        
+        var xOffset = [CGFloat]()
         for column in 0..<numberOfColumns {
             var x: CGFloat = 0
             if let previous = xOffset.last { x = previous + columnWidth + minimumInteritemSpacing }
             else { x = CGFloat(column) * columnWidth + sectionInset.left }
             xOffset.append(x)
         }
+
         var column = 0
         let firstRowOffset = collectionView.contentInset.top + sectionInset.top
-        yOffset = [CGFloat](repeating: firstRowOffset, count: numberOfColumns)
+        var yOffset = [CGFloat](repeating: firstRowOffset, count: numberOfColumns)
         
         for item in 0..<collectionView.numberOfItems(inSection: 0) {
-            calculateFrames(itemIndex: item, column: &column, columnWidth: columnWidth)
+            guard let attributes = calculateFrames(for: item,
+                                                   column: &column,
+                                                   maximumWidth: columnWidth,
+                                                   yOffset: &yOffset,
+                                                   columnX: xOffset[column]) else { continue }
+            cache.append(attributes)
         }
     }
     
-    func calculateFrames(itemIndex: Int, column: inout Int, columnWidth: CGFloat) {
-        guard let collectionView = collectionView else { return }
+    func calculateFrames(for itemIndex: Int,
+                         column: inout Int,
+                         maximumWidth: CGFloat,
+                         yOffset: inout [CGFloat],
+                         columnX: CGFloat) -> UICollectionViewLayoutAttributes? {
+        
+        guard let collectionView = collectionView else { return nil }
         
         let indexPath = IndexPath(item: itemIndex, section: 0)
         
+        // Requesting aspect ratio of the image from the delegate and calculating new frame
         let aspectRatio = delegate.collectionView(collectionView, aspectRatioForImageAtIndexPath: indexPath)
-        let height = (columnWidth / aspectRatio)
-        let frame = CGRect(x: xOffset[column], y: yOffset[column], width: columnWidth, height: height)
-        
-        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-        attributes.frame = frame
-        cache.append(attributes)
+        let height = (maximumWidth / aspectRatio)
+        let frame = CGRect(x: columnX, y: yOffset[column], width: maximumWidth, height: height)
         
         contentHeight = max(contentHeight, frame.maxY)
         yOffset[column] += (height + minimumLineSpacing)
         
+        // Set column to 0 only if it has reached to the right most one else advance to the next column
         column = (column < (numberOfColumns - 1)) ? (column + 1) : 0
+        
+        // Adding calculated frame to cache
+        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+        attributes.frame = frame
+        return attributes
     }
     
     override func invalidateLayout() {

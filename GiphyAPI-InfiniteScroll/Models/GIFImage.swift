@@ -26,19 +26,9 @@ struct GIFImage: Decodable {
         var original: Resource?
     }
     
-//    struct Analytics: Decodable {
-//        struct AnalyticsURL: Decodable {
-//            var url: URL?
-//        }
-//        var onload: AnalyticsURL?
-//        var onclick: AnalyticsURL?
-//        var onsent: AnalyticsURL?
-//    }
-    
     var type: TypeEnum?
     var id: String?
     var import_datetime: String?
     var title: String?
     var images: RemoteImageResource?
-//    var analytics: Analytics?
 }

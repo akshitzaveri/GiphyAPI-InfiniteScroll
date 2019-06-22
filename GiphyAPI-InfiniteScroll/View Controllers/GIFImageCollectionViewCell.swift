@@ -16,11 +16,14 @@ final class GIFImageCollectionViewCell: UICollectionViewCell {
     private var downloadTask: URLSessionDataTask?
     
     func set(_ image: GIFImage) {
+        //clearing existing GIF to avoid GIF images overlapping each other when user is scrolling
         downloadTask?.cancel()
         imageView.image = nil
         imageView.gifImage?.clear()
         imageView.gifImage = nil
         imageView.currentImage = nil
+        
+        // Loading the GIF
         guard let url = image.images?.preview_gif?.url else { return }
         downloadTask = imageView.setGifFromURL(url)
     }
