@@ -74,10 +74,15 @@ class GiphyImageListCollectionViewAdapter: NSObject {
 }
 
 extension GiphyImageListCollectionViewAdapter: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return result?.data?.count ?? 0 }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return result?.data?.count ?? 0
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? GIFImageCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView
+            .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? GIFImageCollectionViewCell else
+        { return UICollectionViewCell() }
+        
         if let image = result?.data?[indexPath.item] { cell.set(image) }
         return cell
     }
@@ -85,10 +90,8 @@ extension GiphyImageListCollectionViewAdapter: UICollectionViewDataSource {
 
 extension GiphyImageListCollectionViewAdapter: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        guard let maxIndexPath = indexPaths.max(), let totalImagesCount = result?.data?.count else {
-            return
-        }
-        if maxIndexPath.item >= totalImagesCount-1 { delegate?.loadNextPage() }
+        guard let maxIndexPath = indexPaths.max(), let totalImagesCount = result?.data?.count else { return }
+        if maxIndexPath.item >= totalImagesCount - 1 { delegate?.loadNextPage() }
         else { prefetchGIFs(for: indexPaths) }
     }
     
@@ -114,25 +117,14 @@ extension GiphyImageListCollectionViewAdapter: UICollectionViewDataSourcePrefetc
 }
 
 extension GiphyImageListCollectionViewAdapter: TilesCollectionViewLayoutDelegate {
-    func collectionView(_ collectionView: UICollectionView, aspectRatioForImageAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        aspectRatioForImageAtIndexPath indexPath: IndexPath) -> CGFloat {
         
-//        var size = CGSize.zero
-//        guard let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout,
-//            let image = result?.data?[indexPath.item], let width = Double(image.images?.preview_gif?.width ?? "0"),
-//            let height = Double(image.images?.preview_gif?.height ?? "0") else { return 0 }
-        
-        guard let heightString = result?.data?[indexPath.item].images?.preview_gif?.height,
-            let height = Double(heightString),
-            let widthString = result?.data?[indexPath.item].images?.preview_gif?.width,
-            let width = Double(widthString) else {
-            return 0
+        guard let gif = result?.data?[indexPath.item].images?.preview_gif,
+            let heightString = gif.height, let height = Double(heightString),
+            let widthString = gif.width, let width = Double(widthString) else {
+                return 0
         }
         return CGFloat(width/height)
-        
-//        let insets = flowLayout.sectionInset.left + flowLayout.sectionInset.right + flowLayout.minimumInteritemSpacing
-//        size.width = (collectionView.frame.width - insets) / kNUMBER_OF_COLUMNS
-//
-//        let aspectRatio = CGFloat(width / height)
-//        size.height = size.width / aspectRatio
     }
 }

@@ -21,7 +21,8 @@ class GiphyImageListCollectionViewAdapterTests: XCTestCase {
 extension GiphyImageListCollectionViewAdapterTests {
     
     func getMockCollectionView() -> UICollectionView {
-        return UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), collectionViewLayout: getMockTilesCollectionViewLayout())
+        return UICollectionView(frame: CGRect(x: 0, y: 0, width: 500, height: 500),
+                                collectionViewLayout: getMockTilesCollectionViewLayout())
     }
     
     func getMockSectionInset() -> UIEdgeInsets { return UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4) }
@@ -30,7 +31,10 @@ extension GiphyImageListCollectionViewAdapterTests {
     func getMockLineSpacing() -> CGFloat { return 6 }
     
     func getMockTilesCollectionViewLayout() -> TilesCollectionViewLayout {
-        return TilesCollectionViewLayout(numberOfColumns: getMockColumns(), delegate: nil, sectionInset: getMockSectionInset(), minimumInteritemSpacing: getMockInteritemSpacing(), minimumLineSpacing: getMockLineSpacing())
+        return TilesCollectionViewLayout(numberOfColumns: getMockColumns(), delegate: nil,
+                                         sectionInset: getMockSectionInset(),
+                                         minimumInteritemSpacing: getMockInteritemSpacing(),
+                                         minimumLineSpacing: getMockLineSpacing())
     }
     
     func getMockSearchResult() -> SearchAPIResult {
@@ -44,7 +48,10 @@ extension GiphyImageListCollectionViewAdapterTests {
         let viewcontroller = SearchViewControllerMock()
         
         // when
-        let sut = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: viewcontroller, sectionInset: getMockSectionInset(), columns: getMockColumns(), minimumInteritemSpacing: getMockInteritemSpacing(), minimumLineSpacing: getMockLineSpacing())
+        let sut = GiphyImageListCollectionViewAdapter(with: collectionView, and: searchResult, delegate: viewcontroller,
+                                                      sectionInset: getMockSectionInset(), columns: getMockColumns(),
+                                                      minimumInteritemSpacing: getMockInteritemSpacing(),
+                                                      minimumLineSpacing: getMockLineSpacing())
         
         // then
         XCTAssertNotNil(sut)

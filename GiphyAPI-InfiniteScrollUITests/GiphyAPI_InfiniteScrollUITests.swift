@@ -24,9 +24,14 @@ class GiphyAPI_InfiniteScrollUITests: XCTestCase {
         let app = XCUIApplication()
 
         let searchCoolGifsSearchField = app.searchFields["Search cool GIFs"]
+        XCTAssertTrue(searchCoolGifsSearchField.exists)
         searchCoolGifsSearchField.typeText("Me")
+        XCTAssertTrue(app/*@START_MENU_TOKEN@*/.keyboards.buttons["Search"]/*[[".keyboards.buttons[\"Search\"]",".buttons[\"Search\"]"],[[[-1,1],[-1,0]]],[1]]@END_MENU_TOKEN@*/.exists)
         
-        app/*@START_MENU_TOKEN@*/.buttons["Search"]/*[[".keyboards.buttons[\"Search\"]",".buttons[\"Search\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        app.otherElements.containing(.navigationBar, identifier:"Cool GIFs").children(matching: .other).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 0).children(matching: .collectionView).element.swipeUp()
+        app/*@START_MENU_TOKEN@*/.keyboards.buttons["Search"]/*[[".keyboards.buttons[\"Search\"]",".buttons[\"Search\"]"],[[[-1,1],[-1,0]]],[1]]@END_MENU_TOKEN@*/.tap()
+        
+        let collectionViewElement = app.otherElements.containing(.navigationBar, identifier:"Cool GIFs").children(matching: .other).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 0).children(matching: .collectionView).element
+        XCTAssertTrue(collectionViewElement.exists)
+        collectionViewElement.swipeUp()
     }
 }

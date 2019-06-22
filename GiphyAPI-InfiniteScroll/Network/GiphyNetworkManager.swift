@@ -49,9 +49,11 @@ struct GiphyNetworkURLBuilder {
     
     private func getQueryItems(from parameters: [String: Any]? = nil) -> [URLQueryItem] {
         var queryItems = [ URLQueryItem(name: "api_key", value: apiKey) ]
-        if let queryItemsFromParameters = parameters?.map({ URLQueryItem(name: $0.key, value: ($0.value as? String) ?? String(describing: $0.value)) }) {
-            queryItems.append(contentsOf: queryItemsFromParameters)
+        guard let queryItemsFromParameters = parameters?
+            .map({ URLQueryItem(name: $0.key, value: ($0.value as? String) ?? String(describing: $0.value)) }) else {
+            return queryItems
         }
+        queryItems.append(contentsOf: queryItemsFromParameters)
         return queryItems
     }
 }

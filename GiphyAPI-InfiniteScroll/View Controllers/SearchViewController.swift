@@ -45,7 +45,8 @@ final class SearchViewController: UIViewController {
             DispatchQueue.main.async {
                 if self.collectionViewAdapter == nil {
                     self.result = response
-                    self.collectionViewAdapter = GiphyImageListCollectionViewAdapter(with: self.resultsCollectionView, and: response, delegate: self)
+                    self.collectionViewAdapter = GiphyImageListCollectionViewAdapter(with: self.resultsCollectionView,
+                                                                                     and: response, delegate: self)
                     self.collectionViewAdapter?.reloadData()
                 } else if (response?.data?.count ?? 0) > 0 {
                     let existingImages = self.result?.data ?? []

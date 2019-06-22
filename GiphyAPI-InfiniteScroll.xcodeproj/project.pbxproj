@@ -123,6 +123,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BF0B1B6822BE191F00ED6C49 /* GIFImageCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				BFE9F64D22BCE95A0055662C /* GIFImageCollectionViewCell.swift */,
+				BFE9F64E22BCE95A0055662C /* GIFImageCollectionViewCell.xib */,
+			);
+			path = GIFImageCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		BF0B1B6922BE192800ED6C49 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				BF0B1B6822BE191F00ED6C49 /* GIFImageCollectionViewCell */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		BF11520B22BA7D1500EBE9D5 = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				BF11521722BA7D1500EBE9D5 /* AppDelegate.swift */,
+				BF0B1B6922BE192800ED6C49 /* Classes */,
 				BF11522322BA7D1800EBE9D5 /* Info.plist */,
 				BF42BEA422BB058A00555E50 /* Models */,
 				BFE9F63E22BCB62E0055662C /* Network */,
@@ -201,11 +219,9 @@
 		BF42BE9D22BB03F500555E50 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				BF11521922BA7D1500EBE9D5 /* SearchViewController.swift */,
-				BFE9F64D22BCE95A0055662C /* GIFImageCollectionViewCell.swift */,
-				BFE9F64E22BCE95A0055662C /* GIFImageCollectionViewCell.xib */,
-				BFE9F65122BCF5BE0055662C /* TilesCollectionViewLayout.swift */,
 				BFE9F65322BD01330055662C /* GiphyImageListCollectionViewAdapter.swift */,
+				BF11521922BA7D1500EBE9D5 /* SearchViewController.swift */,
+				BFE9F65122BCF5BE0055662C /* TilesCollectionViewLayout.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";

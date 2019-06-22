@@ -24,13 +24,8 @@ struct SearchAPIResult: Decodable {
     var pagination: Pagination?
     var meta: Meta?
     var response_id: String?
-    
-    var statusCode: String?
-    var errorMessage: String?
 }
 
 extension SearchAPIResult: Equatable {
-    static func == (lhs: SearchAPIResult, rhs: SearchAPIResult) -> Bool {
-        return lhs.response_id == rhs.response_id
-    }
+    static func == (lhs: SearchAPIResult, rhs: SearchAPIResult) -> Bool { return lhs.response_id == rhs.response_id }
 }
